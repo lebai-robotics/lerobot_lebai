@@ -4,7 +4,7 @@ from lerobot.cameras import CameraConfig
 
 from lerobot.robots.config import RobotConfig
 
-@RobotConfig.register_subclass("lerobot_robot_xarm")
+@RobotConfig.register_subclass("lerobot_lebai")
 @dataclass
 class XarmConfig(RobotConfig):
     ip: str = "192.168.1.184"

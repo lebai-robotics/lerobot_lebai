@@ -6,78 +6,24 @@ from typing import Any
 
 import numpy as np
 import transforms3d as t3d
-from xarm.wrapper import XArmAPI
+import lebai_sdk
 from teleop.utils.jacobi_robot import JacobiRobot
 
 from lerobot.cameras import make_cameras_from_configs
 from lerobot.utils.errors import DeviceNotConnectedError, DeviceAlreadyConnectedError
 from lerobot.robots.robot import Robot
 
-from .config_xarm import XarmConfig
+from .config_lebai import LebaiConfig
 
 
 logger = logging.getLogger(__name__)
 
 
-class Lite6Gripper:
-    def __init__(self, arm: XArmAPI):
-        self._arm = arm
-        self._prev_gripper_state = None
-        self._gripper_state = 0.0
-        self._gripper_open_time = 0.0
-        self._gripper_stopped = False
+class Lebai(Robot):
+    config_class = LebaiConfig
+    name = "lebai"
 
-    def open(self):
-        self._arm.open_lite6_gripper()
-
-    def close(self):
-        self._arm.close_lite6_gripper()
-
-    def stop(self):
-        self._arm.stop_lite6_gripper()
-
-    def set_gripper_state(self, gripper_state: float) -> None:
-        self._gripper_state = gripper_state
-
-        if self._gripper_state is not None:
-            if (
-                self._prev_gripper_state is None
-                or self._prev_gripper_state != self._gripper_state
-            ):
-                if self._gripper_state < 1.0:
-                    self._gripper_stopped = False
-                    self.close()
-                else:
-                    self._gripper_open_time = time.time()
-                    self._gripper_stopped = False
-                    self.open()
-
-            if (
-                not self._gripper_stopped
-                and self._gripper_state >= 1.0
-                and time.time() - self._gripper_open_time > 1.0
-            ):
-                # If gripper was closed and now is open, stop the gripper
-                self._gripper_stopped = True
-                self.stop()
-
-        self._prev_gripper_state = self._gripper_state
-
-    def get_gripper_state(self) -> float:
-        return self._gripper_state
-
-    def reset_gripper(self) -> None:
-        self._prev_gripper_state = None
-        self._gripper_state = 0.0
-        self._gripper_open_time = 0.0
-        self._gripper_stopped = False
-
-
-class Xarm(Robot):
-    config_class = XarmConfig
-    name = "xarm"
-
-    def __init__(self, config: XarmConfig):
+    def __init__(self, config: LebaiConfig):
         super().__init__(config)
         self.cameras = make_cameras_from_configs(config.cameras)
 
@@ -217,7 +163,7 @@ class Xarm(Robot):
         # Read arm position
         start = time.perf_counter()
 
-        # Read joint positions from xarm
+        # Read joint positions
         _, (joint_angles, _, joint_efforts) = self._arm.get_joint_states()
 
         obs_dict = {}

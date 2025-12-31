@@ -3,22 +3,22 @@ requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lerobot_robot_xarm"
+name = "lerobot_lebai"
 version = "0.0.3"
-description = "LeRobot XArm integration"
+description = "LeRobot Lebai integration"
 readme = "README.md"
 authors = [
-  { name = "Spes Robotics", email = "contact@spes.ai" },
+  { name = "Lebai Robotics", email = "contact@lebai.ltd" },
 ]
 license = { file = "LICENSE" }
-requires-python = ">=3.10"
+requires-python = ">=3.6"
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "xarm-python-sdk",
+  "lebai-sdk",
   "numpy",
   "transforms3d",
   "teleop",
@@ -27,8 +27,8 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["lerobot_robot_xarm*"]
+include = ["lerobot_lebai*"]
 exclude = ["*.egg-info"]
 
 [tool.setuptools.package-data]
-"lerobot_robot_xarm" = ["*.urdf"]
+"lerobot_lebai" = ["*.urdf"]
