@@ -6,11 +6,14 @@ from lerobot.robots.config import RobotConfig
 
 @RobotConfig.register_subclass("lerobot_lebai")
 @dataclass
-class XarmConfig(RobotConfig):
+class LebaiConfig(RobotConfig):
     ip: str = "192.168.1.184"
+    port: int = 3031
+    gripper_force: int = 100
+    a: int = 1
+    v: int = 1
+    r: int = 0
     use_effort: bool = False
     use_velocity: bool = True
     use_acceleration: bool = True
-    home_translation: list[float] = field(default_factory=lambda: [0.2, 0.0, 0.05])
-    home_orientation_euler: list[float] = field(default_factory=lambda: [3.14, 0.0, 0.0])
     cameras: dict[str, CameraConfig] = field(default_factory=dict)
